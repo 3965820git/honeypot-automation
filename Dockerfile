@@ -9,8 +9,7 @@ RUN useradd -m honeypot
 # Переходим в домашнюю директорию пользователя honeypot
 WORKDIR /home/honeypot
 
-# 2. Клонируем репозиторий Cowrie в *новую* поддиректорию 'cowrie' внутри /home/honeypot
-#    Это решит проблему "destination path '.' already exists"
+# 2. Клонируем репозиторий Cowrie в новую поддиректорию 'cowrie' внутри /home/honeypot
 RUN git clone https://github.com/cowrie/cowrie.git cowrie
 
 # 3. Теперь меняем рабочую директорию на клонированный репозиторий Cowrie
@@ -21,6 +20,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Копируем дистрибутивный файл конфигурации (если он нужен на этом этапе)
 RUN cp etc/cowrie.cfg.dist etc/cowrie.cfg
+
+# --- НОВЫЕ СТРОКИ ДЛЯ УПРАВЛЕНИЯ РАЗРЕШЕНИЯМИ НА ЛОГИ ---
+# Создаем директорию для логов Cowrie и устанавливаем владельца
+RUN mkdir -p /var/log/cowrie && chown honeypot:honeypot /var/log/cowrie
+# --- КОНЕЦ НОВЫХ СТРОК ---
 
 # Определение пользователя, под которым будет работать контейнер по умолчанию
 USER honeypot
