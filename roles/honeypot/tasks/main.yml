@@ -5,9 +5,12 @@
     dest: /home/al/Dockerfile # Это путь, куда Dockerfile будет скопирован на целевом сервере. Убедитесь, что он существует и доступен для пользователя 'al'.
 
 - name: Копирование cowrie.cfg
-  ansible.builtin.template:
-    src: config.cfg.j2
-    dest: /home/ubuntu/cowrie.cfg
+  template: # <-- Изменено на 'template'
+    src: config.cfg.j2 # Исходный файл внутри роли (roles/honeypot/templates/config.cfg.j2)
+    dest: /home/al/cowrie.cfg # <-- Изменено на домашнюю директорию пользователя 'al'
+    owner: al          # Рекомендуется установить владельца
+    group: al          # Рекомендуется установить группу
+    mode: '0644'       # Рекомендуется установить права доступа
 
 - name: Запуск контейнера honeypot
   ansible.builtin.shell: |
