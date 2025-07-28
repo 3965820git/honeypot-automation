@@ -3,18 +3,26 @@ pipeline {
     stages {
         stage('Клонирование репозитория') {
             steps {
-                git branch: 'main', url: 'https://github.com/3965820git/honeypot-automation.git' // ИЛИ 'master', если ваша ветка master
+                git branch: 'main', url: 'https://github.com/3965820git/honeypot-automation.git'
             }
         }
         stage('Линт и тесты') {
             steps {
-                sh 'ansible-playbook --syntax-check ansible/playbook.yml'
-                sh 'ansible-playbook --check ansible/playbook.yml -i ansible/inventory'
+                // Syntax check не требует SSH-соединения, но '-i' для проверки host pattern
+                sh 'ansible-playbook --syntax-check ansible/playbook.yml -i ansible/inventory'
+
+                // --check требует SSH-соединения, используем sshagent
+                sshagent(credentials: ['honeypot-ssh-key']) { // Используйте ID, который вы дали в Jenkins Credentials
+                    sh 'ansible-playbook --check ansible/playbook.yml -i ansible/inventory' // Не нужно --private-key с sshagent
+                }
             }
         }
         stage('Развертывание Honeypot') {
             steps {
-                sh 'ansible-playbook ansible/playbook.yml -i ansible/inventory'
+                // Развертывание требует SSH-соединения
+                sshagent(credentials: ['honeypot-ssh-key']) {
+                    sh 'ansible-playbook ansible/playbook.yml -i ansible/inventory' // Не нужно --private-key с sshagent
+                }
             }
         }
     }
