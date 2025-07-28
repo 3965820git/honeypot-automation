@@ -13,6 +13,8 @@
     mode: '0644'       # Рекомендуется установить права доступа
 
 - name: Запуск контейнера honeypot
-  ansible.builtin.shell: |
+  shell: |
     docker build -t honeypot .
-    docker run -d --name honeypot -p {{ honeypot_port }}:2222 honeypot
+    docker run -d --name honeypot -p 2222:2222 honeypot
+  args:
+    chdir: /home/al/ # <-- Добавьте эту строку, чтобы убедиться, что команды Docker выполняются из нужной директории
