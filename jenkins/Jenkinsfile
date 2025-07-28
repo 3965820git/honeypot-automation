@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Клонирование репозитория') {
             steps {
-                git 'https://github.com/3965820git/honeypot-automation.git'
+                git branch: 'main', url: 'https://github.com/3965820git/honeypot-automation.git' // ИЛИ 'master', если ваша ветка master
             }
         }
         stage('Линт и тесты') {
