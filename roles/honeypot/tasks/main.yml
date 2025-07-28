@@ -14,7 +14,13 @@
 
 - name: Запуск контейнера honeypot
   shell: |
+    # Останавливаем существующий контейнер honeypot, если он запущен (|| true предотвращает ошибку, если контейнера нет)
+    docker stop honeypot || true
+    # Удаляем существующий контейнер honeypot, если он существует (|| true предотвращает ошибку, если контейнера нет)
+    docker rm honeypot || true
+    # Собираем образ Docker
     docker build -t honeypot .
+    # Запускаем новый контейнер honeypot
     docker run -d --name honeypot -p 2222:2222 honeypot
   args:
-    chdir: /home/al/ # <-- Добавьте эту строку, чтобы убедиться, что команды Docker выполняются из нужной директории
+    chdir: /home/al/ # Убедитесь, что это правильный путь к контексту сборки Docker
