@@ -1,8 +1,8 @@
 ---
 - name: Копирование Dockerfile
-  ansible.builtin.copy:
-    src: Dockerfile
-    dest: /tmp/Dockerfile
+  copy:
+    src: "{{ playbook_dir }}/../Dockerfile" # Теперь Ansible будет искать Dockerfile на один уровень выше, чем ansible/playbook.yml
+    dest: /home/al/Dockerfile # Это путь, куда Dockerfile будет скопирован на целевом сервере. Убедитесь, что он существует и доступен для пользователя 'al'.
 
 - name: Копирование cowrie.cfg
   ansible.builtin.template:
