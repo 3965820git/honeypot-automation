@@ -1,4 +1,4 @@
-FROM ubuntu:22.04 [cite: 164]
+FROM ubuntu:22.04
 RUN apt update && apt install -y openssh-server python3-pip 
 RUN pip install cowrie 
 RUN useradd -m honeypot 
