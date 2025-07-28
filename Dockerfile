@@ -21,17 +21,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Копируем дистрибутивный файл конфигурации
 RUN cp etc/cowrie.cfg.dist etc/cowrie.cfg
 
-# --- НОВЫЕ СТРОКИ ДЛЯ ИСПРАВЛЕНИЯ ПУТЕЙ ЛОГОВ В КОНФИГУРАЦИИ COWRIE ---
-# Изменяем пути к файлам логов в cowrie.cfg на абсолютные
-RUN sed -i 's|^logfile = var/log/cowrie/cowrie.json|logfile = /var/log/cowrie/cowrie.json|g' etc/cowrie.cfg
-RUN sed -i 's|^logfile = var/log/cowrie/cowrie.log|logfile = /var/log/cowrie/cowrie.log|g' etc/cowrie.cfg
-# Дополнительно, на случай других переменных
-RUN sed -i 's|^jsonlog = var/log/cowrie/cowrie.json|jsonlog = /var/log/cowrie/cowrie.json|g' etc/cowrie.cfg
-RUN sed -i 's|^textlog = var/log/cowrie/cowrie.log|textlog = /var/log/cowrie/cowrie.log|g' etc/cowrie.cfg
-# --- КОНЕЦ НОВЫХ СТРОК ---
+# --- ИСПРАВЛЕННАЯ СТРОКА ДЛЯ ОБНОВЛЕНИЯ ПУТИ К ЛОГАМ ---
+# Изменяем log_path в cowrie.cfg на абсолютный путь
+RUN sed -i 's|^log_path = var/log/cowrie|log_path = /var/log/cowrie|g' etc/cowrie.cfg
+# --- КОНЕЦ ИСПРАВЛЕННОЙ СТРОКИ ---
 
 # Создаем абсолютную директорию для логов и устанавливаем владельца honeypot
-# Этот путь теперь согласуется с тем, что Cowrie будет искать
+# Этот путь теперь согласуется с тем, что Cowrie будет использовать
 RUN mkdir -p /var/log/cowrie && chown honeypot:honeypot /var/log/cowrie
 
 # Определение пользователя, под которым будет работать контейнер по умолчанию
