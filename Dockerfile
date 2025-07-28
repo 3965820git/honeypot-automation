@@ -1,18 +1,22 @@
 FROM ubuntu:22.04
-# Добавляем 'git' для клонирования репозитория
+
+# 1. Устанавливаем необходимые пакеты, включая 'git' для клонирования репозитория
 RUN apt update && apt install -y openssh-server python3-pip git -y
 
+# Создаем пользователя honeypot
 RUN useradd -m honeypot
+
+# Переходим в домашнюю директорию пользователя honeypot
 WORKDIR /home/honeypot
 
-# Клонируем репозиторий Cowrie
+# 2. Клонируем репозиторий Cowrie в текущую директорию (/home/honeypot)
 RUN git clone https://github.com/cowrie/cowrie.git .
 
-# Переходим в директорию клонированного репозитория Cowrie
+# 3. Переходим в директорию клонированного репозитория Cowrie
 WORKDIR cowrie
 
-# Устанавливаем все зависимости Cowrie из файла requirements.txt
-# '--no-cache-dir' помогает уменьшить размер итогового образа Docker
+# 4. Устанавливаем все Python-зависимости Cowrie из файла requirements.txt
+#    ЭТА СТРОКА ЗАМЕНЯЕТ проблемную "RUN pip install cowrie"
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Копируем дистрибутивный файл конфигурации (если он нужен на этом этапе)
