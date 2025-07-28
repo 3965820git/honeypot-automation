@@ -1,0 +1,8 @@
+---
+- [cite_start]name: Развертывание Honeypot-системы [cite: 177]
+  [cite_start]hosts: honeypot [cite: 178]
+  [cite_start]become: yes [cite: 179]
+  [cite_start]vars_files: [cite: 180]
+    - [cite_start]vars.yml [cite: 181]
+  [cite_start]roles: [cite: 182]
+    - [cite_start]honeypot [cite: 183]

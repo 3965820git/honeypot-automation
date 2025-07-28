@@ -1,0 +1,21 @@
+pipeline {
+    agent any
+    stages {
+        stage('Клонирование репозитория') {
+            steps {
+                git 'https://github.com/3965820git/honeypot-automation.git'
+            }
+        }
+        stage('Линт и тесты') {
+            steps {
+                sh 'ansible-playbook --syntax-check ansible/playbook.yml'
+                sh 'ansible-playbook --check ansible/playbook.yml -i ansible/inventory'
+            }
+        }
+        stage('Развертывание Honeypot') {
+            steps {
+                sh 'ansible-playbook ansible/playbook.yml -i ansible/inventory'
+            }
+        }
+    }
+}
