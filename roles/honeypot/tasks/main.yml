@@ -1,15 +1,15 @@
 ---
-- [cite_start]name: Копирование Dockerfile [cite: 185]
-  [cite_start]copy: [cite: 186]
-    [cite_start]src: "{{ playbook_dir }}/../Dockerfile" [cite: 187]
-    [cite_start]dest: /home/ubuntu/Dockerfile [cite: 187]
+- name: Копирование Dockerfile
+  ansible.builtin.copy:
+    src: Dockerfile
+    dest: /tmp/Dockerfile
 
-- [cite_start]name: Копирование шаблона конфигурации [cite: 188]
-  template:
-    [cite_start]src: config.cfg.j2 [cite: 189]
-    [cite_start]dest: /home/ubuntu/cowrie.cfg [cite: 190]
+- name: Копирование cowrie.cfg
+  ansible.builtin.template:
+    src: config.cfg.j2
+    dest: /home/ubuntu/cowrie.cfg
 
-- [cite_start]name: Запуск контейнера honeypot [cite: 191]
-  shell: |
-    docker build -t honeypot . 
-    docker run -d --name honeypot -p 2222:2222 honeypot
+- name: Запуск контейнера honeypot
+  ansible.builtin.shell: |
+    docker build -t honeypot .
+    docker run -d --name honeypot -p {{ honeypot_port }}:2222 honeypot
